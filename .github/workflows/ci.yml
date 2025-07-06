@@ -11,6 +11,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      SPRING_PROFILES_ACTIVE: test    # garante o profile 'test' em todo o job
 
     steps:
       - name: Checkout code
@@ -32,7 +34,8 @@ jobs:
             ${{ runner.os }}-m2-
 
       - name: Build and run tests
-        run: mvn --batch-mode verify
+        # passa a flag -Dspring.profiles.active=test aqui
+        run: mvn --batch-mode verify -Dspring.profiles.active=test
 
       - name: Archive test results
         if: always()
