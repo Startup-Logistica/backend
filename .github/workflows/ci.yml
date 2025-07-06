@@ -34,7 +34,7 @@ jobs:
 
     - name: Archive test results
       if: always()
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4         # ← bumped from v3 to v4
       with:
         name: test-results
         path: target/surefire-reports/*.xml
