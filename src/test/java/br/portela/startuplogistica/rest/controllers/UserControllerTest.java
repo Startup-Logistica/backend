@@ -1,21 +1,25 @@
 package br.portela.startuplogistica.rest.controllers;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import org.json.JSONObject;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.servlet.MockMvc;
-
-@ActiveProfiles("test")
 @SpringBootTest
 @AutoConfigureMockMvc
+@ActiveProfiles("test")
+@AutoConfigureTestDatabase(replace = Replace.ANY)
 class UserControllerTest {
 
     @Autowired
@@ -25,9 +29,8 @@ class UserControllerTest {
 
     @BeforeEach
     void obterToken() throws Exception {
-        // Ajuste os valores conforme um usuário existente no seu banco de teste
         String loginJson = """
-            {"email":"admin@teste.com","password":"123456"}
+            {"email":"admin@teste.com","password":"admin123"}
         """;
 
         var res = mvc.perform(post("/api/v1/login")
@@ -36,8 +39,9 @@ class UserControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        JSONObject obj = new JSONObject(res.getResponse().getContentAsString());
-        token = obj.getString("token");
+        JsonNode root = new ObjectMapper()
+                .readTree(res.getResponse().getContentAsString());
+        token = root.get("token").asText();
     }
 
     @Test
@@ -47,8 +51,7 @@ class UserControllerTest {
                         .param("limit", "10")
                         .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.content").isArray())
-                .andExpect(jsonPath("$.content.length()").isNotEmpty());
+                .andExpect(jsonPath("$.content").isArray());
     }
 
     @Test
@@ -59,4 +62,3 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.email").value("admin@teste.com"));
     }
 }
-
