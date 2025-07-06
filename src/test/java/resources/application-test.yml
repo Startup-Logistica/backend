@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+  flyway:
+    enabled: false
+
+# Se você ainda precisar do placeholder para JWT nos testes, repita aqui:
+custom:
+  jwt:
+    secret: defaultProject2024
+    expiration: 3000
+    issuer: Default Project API
