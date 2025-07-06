@@ -1,0 +1,52 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+spring:
+  application:
+    name: DefaultProject
+  web:
+    locale: pt_BR
+  mvc:
+    locale: pt_BR
+    servlet:
+      path: /api/v1
+  messages:
+    encoding: UTF-8
+  profiles:
+    active: ${PROFILE:dev}
+  jpa:
+    hibernate:
+      ddl-auto: ${HIBERNATE_DDL:none}
+server:
+  servlet:
+    context-path: /
+springdoc:
+  swagger-ui:
+    title: Default Project API
+    version: 1.0
+    tagsSorter: alpha
+    operationsSorter: method
+    disable-swagger-default-url: true
+    path: /docs
+    enabled: true
+  api-docs:
+    path: /docs
+    enabled: true
+  swagger-config:
+    responses:
+      error:
+        401: "Invalid credentials"
+        400: "Problem with the data in the request"
+        403: "Request violates some authorization rule"
+        404: "Resource requested not found"
+        409: "Duplicated Resource"
+        422: "Request violates some business rule"
+        500: "Some unexpected error has occurred"
+        502: "Service is unavailable at the moment"
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
