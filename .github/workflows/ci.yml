@@ -17,9 +17,9 @@ jobs:
       - name: Set up JDK 21
         uses: actions/setup-java@v3
         with:
-          distribution: temurin
-          java-version: 21
-          cache: maven
+          distribution: 'temurin'
+          java-version: '21'
+          cache: 'maven'
 
       - name: Cache Maven local repository
         uses: actions/cache@v3
@@ -29,16 +29,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-m2-
 
-      - name: Run tests with H2 in-memory
-        run: |
-          mvn test -B \
-            -Dspring.profiles.active=test \
-            -Dspring.flyway.enabled=false \
-            -Dspring.datasource.url=jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE \
-            -Dspring.datasource.driver-class-name=org.h2.Driver \
-            -Dspring.datasource.username=sa \
-            -Dspring.datasource.password= \
-            -Dspring.jpa.hibernate.ddl-auto=create-drop
+      - name: Build and run tests
+        run: mvn --batch-mode verify -Dspring.profiles.active=test
 
       - name: Archive test results
         if: always()
