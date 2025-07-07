@@ -1,15 +1,25 @@
-package br.portela.startuplogistica;
+@SpringBootTest(properties = {
+    "custom.jwt.expiration=3600",
+    "spring.mail.enabled=false"
+})
+@AutoConfigureMockMvc
+class UserControllerTest {
 
-import org.junit.jupiter.api.Test;
+    @MockBean
+    private JavaMailSender javaMailSender;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+    // outros @MockBean (JwtTokenService, SmtpEmailService, etc.)
 
-public class DefaultProjectApplicationTests {
+    @Autowired
+    private MockMvc mvc;
 
     @Test
-    void trivialTest() {
-        // um teste que sempre passa
-        assertTrue(true);
+    void deveListarUsuariosPaginados() throws Exception {
+       // ...
     }
 
+    @Test
+    void deveObterUsuarioLogado() throws Exception {
+       // ...
+    }
 }
