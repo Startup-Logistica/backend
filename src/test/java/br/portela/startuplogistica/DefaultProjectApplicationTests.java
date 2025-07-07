@@ -1,17 +1,14 @@
+// src/test/java/br/portela/startuplogistica/DefaultProjectApplicationTests.java
 package br.portela.startuplogistica;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
-@ActiveProfiles("test")
 class DefaultProjectApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
-
+    @Test
+    void contextLoads() {
+        // se o Spring levantar o ApplicationContext com H2 e sem erros, passa.
+    }
 }
