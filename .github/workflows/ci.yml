@@ -1,5 +1,4 @@
-# .github/workflows/ci.yml
-name: CI
+name: Java CI
 
 on:
   push:
@@ -11,7 +10,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      # força o Spring a carregar application-test.* (H2, sem Flyway, chave JWT de teste)
+      # força o Spring a usar application-test.properties
       SPRING_PROFILES_ACTIVE: test
 
     steps:
@@ -25,18 +24,10 @@ jobs:
           java-version: '21'
           cache: maven
 
-      - name: Cache Maven repository
-        uses: actions/cache@v3
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-m2-
+      - name: Build and run tests
+        run: mvn -B clean verify
 
-      - name: Build & test
-        run: mvn clean verify -B
-
-      - name: Upload test reports
+      - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v4
         with:
