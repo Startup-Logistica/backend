@@ -1,11 +1,13 @@
 package br.portela.startuplogistica.rest.controllers;
 
 import br.portela.startuplogistica.dtos.user.input.CreateUserInputDTO;
+import br.portela.startuplogistica.errors.i18n.MessageService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
@@ -21,12 +23,16 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Testcontainers
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-@TestPropertySource(locations = "classpath:application-test.properties")
 public class UserControllerIntegrationTest {
+
+    @MockBean
+    private MessageService messageService;  // Mock at class level
+
+    @Autowired
+    private MockMvc mockMvc;
 
     @Container
     static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:15-alpine")
@@ -42,8 +48,6 @@ public class UserControllerIntegrationTest {
         registry.add("spring.flyway.enabled", () -> "true");
     }
 
-    @Autowired
-    private MockMvc mockMvc;
 
     @Autowired
     private ObjectMapper objectMapper;
