@@ -43,11 +43,13 @@ jobs:
     
     - name: Wait for PostgreSQL
       run: sleep 10
-    
+
     - name: Run tests
       run: mvn -B verify
       env:
         SPRING_PROFILES_ACTIVE: test
+        # Add if you're using i18n messages
+        SPRING_MESSAGES_BASENAME: messages
         SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/testdb
         SPRING_DATASOURCE_USERNAME: testuser
         SPRING_DATASOURCE_PASSWORD: testpass
