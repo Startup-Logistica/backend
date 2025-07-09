@@ -6,6 +6,8 @@ import br.portela.startuplogistica.errors.i18n.MessageService;
 import br.portela.startuplogistica.security.config.SecurityConfig;
 import br.portela.startuplogistica.security.services.JwtTokenService;
 import br.portela.startuplogistica.usecases.auth.LoginUseCase;
+import br.portela.startuplogistica.usecases.auth.RequirePasswordRecoveryUseCase;
+import br.portela.startuplogistica.usecases.auth.ValidatePasswordRecoveryCodeUseCase;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -33,10 +35,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class AuthControllerTest {
 
     @MockBean
-    private MessageService messageService;  // Replace @MockBeans with individual mock
+    private LoginUseCase loginUseCase;
 
     @MockBean
-    private LoginUseCase loginUseCase;
+    private RequirePasswordRecoveryUseCase requirePasswordRecoveryUseCase;
+
+    @MockBean
+    private ValidatePasswordRecoveryCodeUseCase validatePasswordRecoveryCodeUseCase;
 
     @Autowired
     private MockMvc mockMvc;
@@ -52,4 +57,3 @@ public class AuthControllerTest {
                 .andExpect(jsonPath("$.token").value("test-token"));
     }
 }
-
