@@ -1,38 +1,40 @@
-name: CI
+name: Java CI with Maven
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
   pull_request:
+    branches:
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      # Check out o código do repositório
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-      # 1) Install JDK 21 so `--release 21` works
+      # Configura JDK 11 ou 17 para Spring Boot
       - name: Set up JDK 21
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v2
         with:
-          distribution: temurin
           java-version: '21'
+          distribution: 'adoptopenjdk'
 
-      # 2) Restore your Maven cache (optional but recommended)
-      - name: Cache Maven dependencies
-        uses: actions/cache@v3
+      # Instala dependências e compila o código com Maven
+      - name: Build with Maven
+        run: mvn clean install -DskipTests=true
+
+      # Executa os testes
+      - name: Run tests
+        run: mvn test
+
+      # Faz o upload dos logs de testes para o repositório
+      - name: Upload test results
+        uses: actions/upload-artifact@v2
         with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-m2-
-
-      # 3) Pre-fetch dependencies into that cache
-      - name: Prepare Maven offline cache
-        run: mvn dependency:go-offline -B
-
-      # 4) Finally build with Java 21
-      - name: Build & verify
-        run: mvn -B clean verify
-
+          name: test-results
+          path: target/test-classes
