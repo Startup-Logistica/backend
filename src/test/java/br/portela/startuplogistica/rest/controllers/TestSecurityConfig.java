@@ -7,12 +7,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 
 @Configuration
 @Profile("test")
@@ -22,20 +22,13 @@ public class TestSecurityConfig {
     @Primary
     public MessageService messageService() {
         MessageService mock = mock(MessageService.class);
-
-        // Mock the actual methods that exist in your service
         when(mock.get(any(ExceptionCode.class)))
                 .thenReturn("Mocked message");
-
         when(mock.get(any(ExceptionCode.class), any(String[].class)))
                 .thenReturn("Mocked message with args");
-
         return mock;
     }
 
-    /**
-     * Mock for JWT Token Service (commonly used in security tests).
-     */
     @Bean
     @Primary
     public JwtTokenService jwtTokenService() {
@@ -44,17 +37,9 @@ public class TestSecurityConfig {
         return mock;
     }
 
-    /**
-     * Mock for PasswordEncoder (security requirement).
-     */
     @Bean
     @Primary
     public PasswordEncoder passwordEncoder() {
-        PasswordEncoder mock = mock(PasswordEncoder.class);
-        when(mock.encode(anyString())).thenReturn("encoded-password");
-        when(mock.matches(anyString(), anyString())).thenReturn(true);
-        return mock;
+        return new BCryptPasswordEncoder();
     }
-
-    // Add more commonly used mocks here (e.g., repositories, clients, etc.)
 }
