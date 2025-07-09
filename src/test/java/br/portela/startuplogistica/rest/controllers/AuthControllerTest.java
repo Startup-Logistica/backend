@@ -39,8 +39,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc(addFilters = false)
 public class AuthControllerTest {
 
-    @Autowired
+    @Mock
     private LoginUseCase loginUseCase;  // Injected from TestConfig
+
+    @Autowired
+    private MockMvc mockMvc;
 
     @TestConfiguration
     static class MockConfig {

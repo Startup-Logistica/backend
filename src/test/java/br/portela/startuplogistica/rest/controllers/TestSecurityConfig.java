@@ -22,8 +22,14 @@ public class TestSecurityConfig {
     @Primary
     public MessageService messageService() {
         MessageService mock = mock(MessageService.class);
-        // No matchers here - use concrete values or leave unstubbed
-        when(mock.getMessage("some.default.key")).thenReturn("Default message");
+
+        // Mock the actual methods that exist in your service
+        when(mock.get(any(ExceptionCode.class)))
+                .thenReturn("Mocked message");
+
+        when(mock.get(any(ExceptionCode.class), any(String[].class)))
+                .thenReturn("Mocked message with args");
+
         return mock;
     }
 
