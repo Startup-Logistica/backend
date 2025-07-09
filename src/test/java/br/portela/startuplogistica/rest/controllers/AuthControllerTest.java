@@ -2,21 +2,21 @@ package br.portela.startuplogistica.rest.controllers;
 
 import br.portela.startuplogistica.dtos.auth.output.LoginOutputDTO;
 import br.portela.startuplogistica.errors.ApiExceptionHandler;
-import br.portela.startuplogistica.errors.i18n.MessageService;
 import br.portela.startuplogistica.security.config.SecurityConfig;
 import br.portela.startuplogistica.security.services.JwtTokenService;
 import br.portela.startuplogistica.usecases.auth.LoginUseCase;
 import br.portela.startuplogistica.usecases.auth.RequirePasswordRecoveryUseCase;
 import br.portela.startuplogistica.usecases.auth.ValidatePasswordRecoveryCodeUseCase;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.MockBeans;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -32,15 +32,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         ApiExceptionHandler.class
 })
 @AutoConfigureMockMvc(addFilters = false)
+@ExtendWith(MockitoExtension.class) // Add Mockito extension
 public class AuthControllerTest {
 
-    @MockBean
+    @Mock // Standard Mockito annotation instead of @MockBean
     private LoginUseCase loginUseCase;
 
-    @MockBean
+    @Mock
     private RequirePasswordRecoveryUseCase requirePasswordRecoveryUseCase;
 
-    @MockBean
+    @Mock
     private ValidatePasswordRecoveryCodeUseCase validatePasswordRecoveryCodeUseCase;
 
     @Autowired
