@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         classes = {
                 DefaultProjectApplication.class,
-                TestSecurityConfig.class  // Only include shared config
+                TestSecurityConfig.class
         }
 )
 @ActiveProfiles("test")
@@ -36,13 +36,15 @@ public class UserControllerIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @Autowired
+    private CreateUserUseCase createUserUseCase;
+
     @TestConfiguration
-    static class OverrideConfig {
+    static class TestConfig {
         @Bean
         @Primary
         public CreateUserUseCase createUserUseCase() {
             CreateUserUseCase mock = mock(CreateUserUseCase.class);
-// For void methods, use doNothing() or doThrow()
             doNothing().when(mock).execute(any(CreateUserInputDTO.class));
             return mock;
         }
@@ -53,7 +55,7 @@ public class UserControllerIntegrationTest {
     void createUser_ShouldReturnCreated() throws Exception {
         mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\":\"Test User\", \"email\":\"test@example.com\"}"))
+                        .content("{\"name\":\"Test User\",\"email\":\"test@example.com\"}"))
                 .andExpect(status().isCreated());
     }
 }

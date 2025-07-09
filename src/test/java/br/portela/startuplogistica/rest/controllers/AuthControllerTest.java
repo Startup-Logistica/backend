@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
@@ -34,16 +35,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         SecurityConfig.class,
         JwtTokenService.class,
         ApiExceptionHandler.class,
-        TestSecurityConfig.class  // Import shared config
+        TestSecurityConfig.class  // Add this
 })
 @AutoConfigureMockMvc(addFilters = false)
 public class AuthControllerTest {
 
-    @Mock
-    private LoginUseCase loginUseCase;  // Injected from TestConfig
-
     @Autowired
     private MockMvc mockMvc;
+
+    @Mock
+    private LoginUseCase loginUseCase;
 
     @TestConfiguration
     static class MockConfig {
@@ -58,8 +59,6 @@ public class AuthControllerTest {
 
     @Test
     void login_ShouldReturnToken() throws Exception {
-        when(loginUseCase.execute(any())).thenReturn(new LoginOutputDTO("test-token"));
-
         mockMvc.perform(post("/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"email\":\"test@test.com\",\"password\":\"password\"}"))
