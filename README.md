@@ -15,7 +15,7 @@ O backend de StartupLogistica fornece uma API REST para:
 
 **Tecnologias principais**:
 
-* Java 17
+* Java 21
 * Spring Boot (Web, Security, Data JPA, Validation)
 * JWT (jjwt)
 * Banco de dados H2 (teste) ou qualquer outro configurado em `application.yml`
