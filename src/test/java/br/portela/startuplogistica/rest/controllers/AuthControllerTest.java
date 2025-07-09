@@ -15,11 +15,15 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -29,23 +33,25 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Import({
         SecurityConfig.class,
         JwtTokenService.class,
-        ApiExceptionHandler.class
+        ApiExceptionHandler.class,
+        TestSecurityConfig.class  // Import shared config
 })
 @AutoConfigureMockMvc(addFilters = false)
-@ExtendWith(MockitoExtension.class) // Add Mockito extension
 public class AuthControllerTest {
 
-    @Mock // Standard Mockito annotation instead of @MockBean
-    private LoginUseCase loginUseCase;
-
-    @Mock
-    private RequirePasswordRecoveryUseCase requirePasswordRecoveryUseCase;
-
-    @Mock
-    private ValidatePasswordRecoveryCodeUseCase validatePasswordRecoveryCodeUseCase;
-
     @Autowired
-    private MockMvc mockMvc;
+    private LoginUseCase loginUseCase;  // Injected from TestConfig
+
+    @TestConfiguration
+    static class MockConfig {
+        @Bean
+        @Primary
+        public LoginUseCase loginUseCase() {
+            LoginUseCase mock = mock(LoginUseCase.class);
+            when(mock.execute(any())).thenReturn(new LoginOutputDTO("test-token"));
+            return mock;
+        }
+    }
 
     @Test
     void login_ShouldReturnToken() throws Exception {

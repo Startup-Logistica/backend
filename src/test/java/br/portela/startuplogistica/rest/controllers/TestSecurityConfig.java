@@ -18,14 +18,12 @@ import static org.mockito.ArgumentMatchers.anyString;
 @Profile("test")
 public class TestSecurityConfig {
 
-    /**
-     * Mock for MessageService with predefined responses.
-     */
     @Bean
     @Primary
     public MessageService messageService() {
         MessageService mock = mock(MessageService.class);
-        when(mock.get(ExceptionCode.valueOf(anyString()))).thenReturn("Mocked message");
+        // No matchers here - use concrete values or leave unstubbed
+        when(mock.getMessage("some.default.key")).thenReturn("Default message");
         return mock;
     }
 

@@ -1,6 +1,8 @@
 package br.portela.startuplogistica.rest.controllers;
 
 import br.portela.startuplogistica.DefaultProjectApplication;
+import br.portela.startuplogistica.dtos.user.input.CreateUserInputDTO;
+import br.portela.startuplogistica.dtos.user.output.UserMinimalOutputDTO;
 import br.portela.startuplogistica.usecases.user.CreateUserUseCase;
 import br.portela.startuplogistica.usecases.user.FindUserByIdUseCase;
 import org.junit.jupiter.api.Test;
@@ -15,7 +17,8 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.mockito.Mockito.mock;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -23,8 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         classes = {
                 DefaultProjectApplication.class,
-                TestSecurityConfig.class,
-                UserControllerIntegrationTest.TestConfig.class // Add test config
+                TestSecurityConfig.class  // Only include shared config
         }
 )
 @ActiveProfiles("test")
@@ -32,29 +34,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class UserControllerIntegrationTest {
 
     @Autowired
-    private CreateUserUseCase createUserUseCase;
-
-    @Autowired
-    private FindUserByIdUseCase findUserByIdUseCase;
-
-    @Autowired
     private MockMvc mockMvc;
 
     @TestConfiguration
-    static class TestConfig {
+    static class OverrideConfig {
         @Bean
         @Primary
         public CreateUserUseCase createUserUseCase() {
-            return mock(CreateUserUseCase.class);
+            CreateUserUseCase mock = mock(CreateUserUseCase.class);
+// For void methods, use doNothing() or doThrow()
+            doNothing().when(mock).execute(any(CreateUserInputDTO.class));
+            return mock;
         }
-
-        @Bean
-        @Primary
-        public FindUserByIdUseCase findUserByIdUseCase() {
-            return mock(FindUserByIdUseCase.class);
-        }
-
-        // Add similar @Bean methods for other use cases
     }
 
     @Test
@@ -62,7 +53,7 @@ public class UserControllerIntegrationTest {
     void createUser_ShouldReturnCreated() throws Exception {
         mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\":\"Test User\",\"email\":\"new@user.com\",\"password\":\"validPassword123\"}"))
+                        .content("{\"name\":\"Test User\", \"email\":\"test@example.com\"}"))
                 .andExpect(status().isCreated());
     }
 }
