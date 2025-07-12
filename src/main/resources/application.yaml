@@ -24,7 +24,7 @@ server:
     context-path: /
 springdoc:
   swagger-ui:
-    title: Default Project API
+    title: Portfolio Project API
     version: 1.0
     tagsSorter: alpha
     operationsSorter: method

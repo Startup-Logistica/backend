@@ -1,10 +1,8 @@
 package br.portela.startuplogistica.rest.controllers;
 
-import br.portela.startuplogistica.DefaultProjectApplication;
+import br.portela.startuplogistica.PortfolioProjectApplication;
 import br.portela.startuplogistica.dtos.user.input.CreateUserInputDTO;
-import br.portela.startuplogistica.dtos.user.output.UserMinimalOutputDTO;
 import br.portela.startuplogistica.usecases.user.CreateUserUseCase;
-import br.portela.startuplogistica.usecases.user.FindUserByIdUseCase;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -25,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         classes = {
-                DefaultProjectApplication.class,
+                PortfolioProjectApplication.class,
                 TestSecurityConfig.class
         }
 )

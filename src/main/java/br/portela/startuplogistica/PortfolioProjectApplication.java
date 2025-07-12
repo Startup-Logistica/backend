@@ -11,10 +11,10 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 @SpringBootApplication
 @EnableJpaAuditing
 @SecurityScheme(type = SecuritySchemeType.HTTP, name = "jwt", scheme = "bearer", bearerFormat = "JWT")
-public class DefaultProjectApplication {
+public class PortfolioProjectApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(DefaultProjectApplication.class, args);
+        SpringApplication.run(PortfolioProjectApplication.class, args);
 
         log.info("""
                  \s
